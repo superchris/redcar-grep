@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= @title %></title>
+    <%#= stylesheet_link_tag :reset, :default, :basic_ansi %>
+    <script>
+  function search() {
+    var extensions = [];
+    $("input[name='extension']:checked").each(function() {
+      extensions.push($(this).val());
+    });
+    Controller.search($("#path").val(), $("#query").val(), extensions.join(","));
+  }
+    </script>
+  </head>
+  <body>
+    <%= javascript_controller_actions %>
+    <script type="text/javascript" src="file://<%= Redcar::HtmlView.jquery_path %>"></script>
+    <h1><%= @title %></h1>
+    
+    <form class="actions" action="javascript:return false;">
+      <label>Directory: </label><input type="text" name="path" id="path" value="<%= path %>" size="60"><br/>
+      <input type="text" name="query" id="query"/>
+      <input type="submit" value="Search" onclick="search();"/><br/>
+      <% Redcar::Grep::GrepController::EXTS.each do |ext| %>
+      <input type="checkbox" name="extension" value=".<%=ext%>"/><%=ext%>
+      <% end %>
+    </form>
+    <div id="search_results"></div>
+    
+    
+</body>
+  
+</html>
