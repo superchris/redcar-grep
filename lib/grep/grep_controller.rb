@@ -35,6 +35,15 @@ module Redcar
         Redcar.app.focussed_window.focussed_notebook_tab.edit_view.document.scroll_to_line_at_middle(line.to_i)
       end
       
+      def replace(path, query, replacement, extensions)
+        files = FileList["#{path}/**/*{#{extensions}}"].egrep(/#{query}/).collect {|fn, count, line| fn }.uniq
+        files.each do
+          |file| Project::Manager.open_file(file)
+          options = Redcar::DocumentSearch::QueryOptions.new
+          Redcar::DocumentSearch::ReplaceAllCommand.new(query, replacement, options, false).execute
+        end
+      end
+      
       def search(path, query, extensions)
         execute %{$("#search_results").empty();}
         FileList["#{path}/**/*{#{extensions}}"].egrep(/#{query}/) do |fn, count, line|

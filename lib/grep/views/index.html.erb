@@ -11,6 +11,14 @@
     });
     Controller.search($("#path").val(), $("#query").val(), extensions.join(","));
   }
+  
+  function replace() {
+    var extensions = [];
+    $("input[name='extension']:checked").each(function() {
+      extensions.push($(this).val());
+    });
+    Controller.replace($("#path").val(), $("#query").val(), $("#replacement").val(), extensions.join(","));    
+  }
     </script>
   </head>
   <body>
@@ -20,8 +28,11 @@
     
     <form class="actions" action="javascript:return false;">
       <label>Directory: </label><input type="text" name="path" id="path" value="<%= path %>" size="60"><br/>
-      <input type="text" name="query" id="query"/>
-      <input type="submit" value="Search" onclick="search();"/><br/>
+      <label>Search:</label><input type="text" name="query" id="query"/><br/>
+      <label>Replace With:</label><input type="text" name="replacement" id="replacement"/><br/>
+      <input type="submit" value="Search" onclick="search();"/>
+      <input type="submit" value="Replace In Project" onclick="replace();"/>
+      <br/>
       <% Redcar::Grep::GrepController::EXTS.each do |ext| %>
       <input type="checkbox" name="extension" value=".<%=ext%>"/><%=ext%>
       <% end %>
